@@ -1,6 +1,6 @@
-name: 'Department of Veterans Affairs New User Automation'
+name: 'Member Org Status'
 author: 'Brett Logan'
-description: 'Automates the addition of new users into the VA org'
+description: 'Checks the status of an org member'
 inputs:
   body:
     description: The body of the newly created issue
