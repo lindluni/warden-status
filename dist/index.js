@@ -10271,9 +10271,44 @@ const client = new _Octokit({
 });
 
 (async function() {
-    const username = body[body.length - 1]
-    console.log(username)
+    try {
+        const username = body[body.length - 1]
+        const response = await client.orgs.checkMembershipForUser({
+            org: org,
+            username: username
+        })
+        switch (response.status) {
+            case 204:
+                await sendComment(`${username} is a member of the ${org} organization`)
+                break
+            case 302:
+                await sendComment(`You are not authorized to make this request`)
+                break
+            case 404:
+                await sendComment(`${username} is not a member of the ${org} organization`)
+                break
+            default:
+                await sendComment(`Unable to determine membership for ${username}`)
+                break
+        }
+    } catch (err) {
+        await sendComment(`An error occurred while checking membership: ${err.message}`)
+        core.setFailed(error.message)
+    }
 })()
+
+async function sendComment(comment) {
+    try {
+        await client.issues.createComment({
+            owner: org,
+            repo: repo,
+            issue_number: issueNumber,
+            body: comment
+        })
+    } catch(err) {
+        core.setFailed(err.message)
+    }
+}
 
 })();
 
