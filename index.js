@@ -31,21 +31,26 @@ const client = new _Octokit({
 (async function() {
     try {
         const username = body[body.length - 1]
+        core.info(`Checking if user ${username} is a member of ${org}`)
         const response = await client.orgs.checkMembershipForUser({
             org: org,
             username: username
         })
         switch (response.status) {
             case 204:
+                core.info(`User ${username} is a member of ${org}`)
                 await sendComment(`${username} is a member of the ${org} organization`)
                 break
             case 302:
+                core.info(`Requestor not authorized to perform this action`)
                 await sendComment(`You are not authorized to make this request`)
                 break
             case 404:
+                core.info(`User ${username} is not a member of ${org}`)
                 await sendComment(`${username} is not a member of the ${org} organization`)
                 break
             default:
+                core.info(`Unknown response from GitHub API: ${response.status}`)
                 await sendComment(`Unable to determine membership for ${username}`)
                 break
         }
@@ -57,6 +62,7 @@ const client = new _Octokit({
 
 async function sendComment(comment) {
     try {
+        core.info(`Sending response: ${comment}`)
         await client.issues.createComment({
             owner: org,
             repo: repo,
