@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/.bin/ncc build index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Brett Logan",
+  "license": "Apache-2.0",
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@octokit/plugin-retry": "^3.0.9",

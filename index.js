@@ -16,7 +16,7 @@ const client = new _Octokit({
     throttle: {
         onRateLimit: (retryAfter, options, octokit) => {
             octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`);
-            if (options.request.retryCount === 0) {
+            if (options.request.retryCount <= 1) {
                 octokit.log.info(`Retrying after ${retryAfter} seconds!`);
                 return true;
             }
@@ -28,7 +28,7 @@ const client = new _Octokit({
 
 });
 
-(async function() {
+(async function () {
     try {
         const username = body[body.length - 1]
         core.info(`Checking if user ${username} is a member of ${org}`)
@@ -69,7 +69,7 @@ async function sendComment(comment) {
             issue_number: issueNumber,
             body: comment
         })
-    } catch(err) {
+    } catch (err) {
         core.setFailed(err.message)
     }
 }
