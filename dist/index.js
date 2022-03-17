@@ -10272,7 +10272,7 @@ const client = new _Octokit({
 
 (async function () {
     try {
-        const username = body[body.length - 1]
+        const username = body[body.length - 1].replace('@', '')
         core.info(`Checking if user ${username} is a member of ${org}`)
         const response = await client.orgs.checkMembershipForUser({
             org: org,
